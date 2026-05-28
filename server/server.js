@@ -5,6 +5,8 @@ const config = require("./config/config");
 
 
 const authRoutes = require('./routes/authRoutes')
+const taskRoutes = require('./routes/taskRoutes')
+
 
 const app = express()
 app.use(cors())
@@ -17,7 +19,10 @@ mongoose.connect(config.mongoose.url, config.mongoose.options)
 .catch((err) => {
     console.log(err);
 });
+
+
 app.use('/api/auth', authRoutes)
+app.use('/api/tasks', taskRoutes)
 
 app.use((err, req, res, next) => {
   console.error(err.stack)
