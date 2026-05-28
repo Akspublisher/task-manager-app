@@ -10,6 +10,7 @@ const TaskForm = ({ onCreate }) => {
       reset()
       toast.success('Task created')
     } catch (err) {
+        console.log(err);
       toast.error('Failed to create task')
     }
   }

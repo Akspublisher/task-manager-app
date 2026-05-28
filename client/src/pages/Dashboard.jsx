@@ -1,36 +1,41 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { taskAPI } from '../services/api'
 import TaskForm from '../components/TaskForm'
 import TaskCard from '../components/TaskCard'
 import toast, { Toaster } from 'react-hot-toast'
+import { useTheme } from '../context/ThemeContext'
+
+
+const { darkMode, setDarkMode } = useTheme
 
 const Dashboard = () => {
-  const { logout, user } = useAuth()
+  const { logout } = useAuth()
   const [tasks, setTasks] = useState([])
   const [filter, setFilter] = useState('all')
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(true)
 
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     try {
       setLoading(true)
       const params = {}
-      if (filter !== 'all') params.status = filter
+      if (filter!== 'all') params.status = filter
       if (search) params.search = search
       
       const res = await taskAPI.getTasks(params)
       setTasks(res.data.tasks)
     } catch (err) {
+      console.log(err)
       toast.error('Failed to load tasks')
     } finally {
       setLoading(false)
     }
-  }
+  }, [filter, search]) // dependencies of fetchTasks
 
   useEffect(() => {
     fetchTasks()
-  }, [filter, search])
+  }, [fetchTasks]) // now fetchTasks is stable via useCallback
 
   const handleCreate = async (data) => {
     await taskAPI.createTask(data)
@@ -43,6 +48,7 @@ const Dashboard = () => {
       toast.success('Task updated')
       fetchTasks()
     } catch (err) {
+        console.log(err)
       toast.error('Update failed')
     }
   }
@@ -54,6 +60,7 @@ const Dashboard = () => {
       toast.success('Task deleted')
       fetchTasks()
     } catch (err) {
+      console.log(err)
       toast.error('Delete failed')
     }
   }
@@ -63,6 +70,7 @@ const Dashboard = () => {
       await taskAPI.toggleTask(id)
       fetchTasks()
     } catch (err) {
+      console.log(err)
       toast.error('Failed to update status')
     }
   }
@@ -77,11 +85,18 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gray-50">
       <Toaster />
       <nav className="bg-white shadow-sm border-b">
+
         <div className="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
           <h1 className="text-xl font-bold">Task Manager</h1>
+            <div className="bg-white dark:bg-gray-800 text-black dark:text-white">
+          <button onClick={() => setDarkMode(!darkMode)} className="bg-gray-200 dark:bg-gray-700 px-3 py-2 rounded text-sm">
+             {darkMode? '☀️' : '🌙'}
+          </button>
+          </div>
           <button onClick={logout} className="bg-red-500 text-white px-4 py-2 rounded text-sm">
             Logout
           </button>
+          
         </div>
       </nav>
 
