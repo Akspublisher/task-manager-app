@@ -11,4 +11,17 @@ API.interceptors.request.use((req) => {
   return req
 })
 
+export const authAPI = {
+  login: (data) => API.post('/auth/login', data),
+  signup: (data) => API.post('/auth/signup', data)
+}
+
+export const taskAPI = {
+  getTasks: (params) => API.get('/tasks', { params }),
+  createTask: (data) => API.post('/tasks', data),
+  updateTask: (id, data) => API.put(`/tasks/${id}`, data),
+  deleteTask: (id) => API.delete(`/tasks/${id}`),
+  toggleTask: (id) => API.patch(`/tasks/${id}/toggle`)
+}
+
 export default API
