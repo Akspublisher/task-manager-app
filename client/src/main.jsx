@@ -10,7 +10,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <ThemeProvider>
         <ErrorBoundary>
             <App />
-            </ErrorBoundary>
+        </ErrorBoundary>
     </ThemeProvider>
   </React.StrictMode>
 )

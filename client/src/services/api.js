@@ -1,7 +1,9 @@
 import axios from 'axios'
 
 const API = axios.create({
-  baseURL: 'https://task-manager-app-seven-rust.vercel.app/api'
+ // baseURL: 'http://localhost:5000/api'
+ // baseURL: 'https://task-manager-app-3jjk.onrender.com/api'
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 })
 
 // Add JWT to every request if exists
